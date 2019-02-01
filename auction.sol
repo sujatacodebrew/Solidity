@@ -1,4 +1,20 @@
-pragma solidity ^0.5.1;
+ppragma solidity ^0.5.1; 
+ contract AuctionFactory{
+     
+     address[] deployedAuction;
+     
+     event ContractDeployed(address at);
+     
+     function createnewauction(string memory name, string memory discription) public{
+         Auction_product auction=new Auction_product(name,discription);
+         deployedAuction.push(address(auction));
+         emit ContractDeployed(address(auction));
+         
+     }
+     
+ }
+ 
+ 
 contract Auction_product{
     enum AuctionState{running ,cancelled , ended}
     AuctionState public state;
@@ -6,14 +22,15 @@ contract Auction_product{
     uint public startingPrice=1;
     uint public highestBid;
     address payable highestBidder;
-    string public productName="Oppo realme 1";
-    string public productDescription="Model = CPH1859, ColorOS Version = v5.2, Android Version = 8.1.0, Processor = Octa Core, RAM = 6.00GB, Device Storage = 128GB";
-    
+    string productName;
+    string productDiscription;
     event HighestBidIncreased(address bidder, uint amount);
     event AuctionEnded(address winner, uint amount);
     mapping(address => uint) pendingReturns;
     
-    constructor() public{
+    constructor(string memory name, string memory discription) public{
+        productName =name;
+        productDiscription=discription;
         state=AuctionState.running;
         owner=msg.sender;
     }
