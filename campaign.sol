@@ -41,9 +41,9 @@ contract Campaign{
         msg.sender.transfer(amount);
         pendingReturns[msg.sender]=0;
     }
-    function productDescription(uint i) public returns(uint,address,string memory){
+    function productDescription(uint i) public view returns(uint,address,string memory,bool){
         require(msg.sender==owner);
-        return(allProduct[i].value,allProduct[i].vendor,allProduct[i].desciption);
+        return(allProduct[i].value,allProduct[i].vendor,allProduct[i].desciption,allProduct[i].status);
     }
     function buyProduct(uint i) public{
         require(msg.sender==owner);
@@ -56,9 +56,11 @@ contract Campaign{
     function closecampaign() public{
         require(reachedValue>=targetValue);
         require(msg.sender==owner);
+        address(owner).transfer(address(this).balance);
         state=campaignState.ended;
     }
     function contractMoney() payable public{
+        require(owner==msg.sender);
         msg.sender.transfer(address(this).balance);
     }
 }
